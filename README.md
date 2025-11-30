@@ -194,6 +194,7 @@ redis-cli -h 127.0.0.1 -p 6379 -a your_password
 
 MIT
 
-## Author Information
+## Author 
 
-This role was created for installing and managing DragonflyDB on Linux systems.
+This Ansible Role was created by [Mikołaj Jeziorny](https://mikolaj-jeziorny.pl/) in 2025.
+Contact with me or open an issue if you have any questions or suggestions.
