@@ -1,0 +1,10 @@
+---
+- name: Reload systemd
+  ansible.builtin.systemd:
+    daemon_reload: true
+
+- name: Restart dragonfly
+  ansible.builtin.systemd:
+    name: dragonfly
+    state: restarted
+  when: dragonfly_service_state == "started"

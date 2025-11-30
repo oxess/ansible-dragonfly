@@ -1,0 +1,42 @@
+# DragonflyDB Configuration
+# Managed by Ansible - DO NOT EDIT MANUALLY
+
+# Network settings
+--bind={{ dragonfly_bind }}
+--port={{ dragonfly_port }}
+
+# Data directory
+--dir={{ dragonfly_data_dir }}
+
+# Database settings
+--dbnum={{ dragonfly_dbnum }}
+
+{% if dragonfly_maxmemory %}
+# Memory limit
+--maxmemory={{ dragonfly_maxmemory }}
+{% endif %}
+
+{% if dragonfly_requirepass %}
+# Authentication
+--requirepass={{ dragonfly_requirepass }}
+{% endif %}
+
+{% if dragonfly_cache_mode %}
+# Cache mode
+--cache_mode=true
+{% endif %}
+
+# Persistence settings
+--dbfilename={{ dragonfly_dbfilename }}
+{% if dragonfly_snapshot_cron %}
+--snapshot_cron={{ dragonfly_snapshot_cron }}
+{% endif %}
+
+# Logging
+{% if dragonfly_logtostderr %}
+--logtostderr
+{% endif %}
+
+{% for flag in dragonfly_extra_flags %}
+{{ flag }}
+{% endfor %}

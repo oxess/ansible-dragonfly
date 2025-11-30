@@ -1,0 +1,58 @@
+---
+# Dragonfly version to install
+dragonfly_version: "latest"
+
+# Installation directories
+dragonfly_install_dir: "/opt/dragonfly"
+dragonfly_bin_path: "/usr/local/bin/dragonfly"
+dragonfly_data_dir: "/var/lib/dragonfly"
+dragonfly_config_dir: "/etc/dragonfly"
+dragonfly_log_dir: "/var/log/dragonfly"
+
+# User and group
+dragonfly_user: "dragonfly"
+dragonfly_group: "dragonfly"
+
+# Network configuration
+dragonfly_bind: "127.0.0.1"
+dragonfly_port: 6379
+
+# Memory configuration
+dragonfly_maxmemory: ""  # e.g., "12gb", empty means no limit
+
+# Authentication
+dragonfly_requirepass: ""  # Set password for authentication, empty means no auth
+
+# Cache mode (when enabled, Dragonfly works as a cache and can evict keys)
+dragonfly_cache_mode: false
+
+# Number of databases
+dragonfly_dbnum: 16
+
+# Persistence configuration
+dragonfly_dbfilename: "dump"
+dragonfly_snapshot_cron: ""  # e.g., "*/15 * * * *" for every 15 minutes
+
+# Logging
+dragonfly_log_level: "info"  # debug, info, warning, error
+dragonfly_logtostderr: false
+
+# Additional flags (list of strings)
+# Example:
+#   dragonfly_extra_flags:
+#     - "--keys_output_limit=1000"
+#     - "--hz=100"
+dragonfly_extra_flags: []
+
+# Service configuration
+dragonfly_service_enabled: true
+dragonfly_service_state: "started"
+
+# Systemd service settings
+dragonfly_service_restart: "on-failure"
+dragonfly_service_restart_sec: 5
+dragonfly_service_limit_nofile: 65535
+
+# Download settings
+dragonfly_github_repo: "dragonflydb/dragonfly"
+dragonfly_force_reinstall: false

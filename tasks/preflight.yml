@@ -1,0 +1,36 @@
+---
+- name: Check if system is Linux
+  ansible.builtin.fail:
+    msg: "DragonflyDB binary installation is only supported on Linux"
+  when: ansible_system != "Linux"
+
+- name: Check kernel version
+  ansible.builtin.fail:
+    msg: "DragonflyDB requires Linux kernel 4.19 or higher. Current version: {{ ansible_kernel }}"
+  when: ansible_kernel is version('4.19', '<')
+
+- name: Check architecture support
+  ansible.builtin.fail:
+    msg: "Unsupported architecture: {{ ansible_architecture }}. Supported: x86_64, amd64, aarch64, arm64"
+  when: ansible_architecture not in dragonfly_arch_map
+
+- name: Check minimum memory
+  ansible.builtin.fail:
+    msg: "DragonflyDB requires at least 4GB RAM. Available: {{ ansible_memtotal_mb }}MB"
+  when: ansible_memtotal_mb < 4096
+
+- name: Gather service facts
+  ansible.builtin.service_facts:
+
+- name: Check if dragonfly is already installed
+  ansible.builtin.stat:
+    path: "{{ dragonfly_bin_path }}"
+  register: dragonfly_binary_stat
+
+- name: Get installed dragonfly version
+  ansible.builtin.command:
+    cmd: "{{ dragonfly_bin_path }} --version"
+  register: dragonfly_installed_version
+  changed_when: false
+  failed_when: false
+  when: dragonfly_binary_stat.stat.exists

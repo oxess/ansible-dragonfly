@@ -1,0 +1,73 @@
+---
+- name: Create dragonfly group
+  ansible.builtin.group:
+    name: "{{ dragonfly_group }}"
+    state: present
+    system: true
+
+- name: Create dragonfly user
+  ansible.builtin.user:
+    name: "{{ dragonfly_user }}"
+    group: "{{ dragonfly_group }}"
+    home: "{{ dragonfly_data_dir }}"
+    shell: /usr/sbin/nologin
+    system: true
+    create_home: false
+
+- name: Create dragonfly directories
+  ansible.builtin.file:
+    path: "{{ item }}"
+    state: directory
+    owner: "{{ dragonfly_user }}"
+    group: "{{ dragonfly_group }}"
+    mode: "0755"
+  loop:
+    - "{{ dragonfly_install_dir }}"
+    - "{{ dragonfly_data_dir }}"
+    - "{{ dragonfly_config_dir }}"
+    - "{{ dragonfly_log_dir }}"
+
+- name: Download dragonfly binary
+  when: not dragonfly_binary_stat.stat.exists or dragonfly_force_reinstall
+  block:
+    - name: Create temporary download directory
+      ansible.builtin.tempfile:
+        state: directory
+        prefix: dragonfly_
+      register: dragonfly_temp_dir
+
+    - name: Download dragonfly tarball
+      ansible.builtin.get_url:
+        url: "{{ dragonfly_download_url }}"
+        dest: "{{ dragonfly_temp_dir.path }}/dragonfly.tar.gz"
+        mode: "0644"
+      register: dragonfly_download
+
+    - name: Extract dragonfly tarball
+      ansible.builtin.unarchive:
+        src: "{{ dragonfly_temp_dir.path }}/dragonfly.tar.gz"
+        dest: "{{ dragonfly_temp_dir.path }}"
+        remote_src: true
+      when: dragonfly_download is changed
+
+    - name: Find extracted dragonfly binary
+      ansible.builtin.find:
+        paths: "{{ dragonfly_temp_dir.path }}"
+        patterns: "dragonfly-*"
+        file_type: file
+      register: dragonfly_extracted_files
+
+    - name: Copy dragonfly binary to installation directory
+      ansible.builtin.copy:
+        src: "{{ dragonfly_extracted_files.files[0].path }}"
+        dest: "{{ dragonfly_bin_path }}"
+        owner: root
+        group: root
+        mode: "0755"
+        remote_src: true
+      notify: Restart dragonfly
+
+    - name: Clean up temporary directory
+      ansible.builtin.file:
+        path: "{{ dragonfly_temp_dir.path }}"
+        state: absent

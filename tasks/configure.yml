@@ -1,0 +1,20 @@
+---
+- name: Deploy dragonfly configuration file
+  ansible.builtin.template:
+    src: dragonfly.conf.j2
+    dest: "{{ dragonfly_config_file }}"
+    owner: "{{ dragonfly_user }}"
+    group: "{{ dragonfly_group }}"
+    mode: "0640"
+  notify: Restart dragonfly
+
+- name: Deploy systemd service file
+  ansible.builtin.template:
+    src: dragonfly.service.j2
+    dest: "{{ dragonfly_systemd_service }}"
+    owner: root
+    group: root
+    mode: "0644"
+  notify:
+    - Reload systemd
+    - Restart dragonfly

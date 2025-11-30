@@ -1,0 +1,34 @@
+[Unit]
+Description=DragonflyDB - A modern replacement for Redis and Memcached
+Documentation=https://www.dragonflydb.io/docs
+After=network-online.target
+Wants=network-online.target
+
+[Service]
+Type=simple
+User={{ dragonfly_user }}
+Group={{ dragonfly_group }}
+
+ExecStart={{ dragonfly_bin_path }} --flagfile={{ dragonfly_config_file }}
+
+WorkingDirectory={{ dragonfly_data_dir }}
+RuntimeDirectory=dragonfly
+RuntimeDirectoryMode=0755
+
+Restart={{ dragonfly_service_restart }}
+RestartSec={{ dragonfly_service_restart_sec }}
+
+LimitNOFILE={{ dragonfly_service_limit_nofile }}
+
+# Security hardening
+NoNewPrivileges=yes
+PrivateTmp=yes
+ProtectSystem=strict
+ProtectHome=yes
+ReadWritePaths={{ dragonfly_data_dir }} {{ dragonfly_log_dir }}
+ProtectKernelTunables=yes
+ProtectKernelModules=yes
+ProtectControlGroups=yes
+
+[Install]
+WantedBy=multi-user.target

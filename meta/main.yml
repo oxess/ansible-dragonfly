@@ -1,0 +1,41 @@
+---
+galaxy_info:
+  role_name: dragonfly
+  author: Mikolaj Jeziorny <contact@mikolaj-jeziorny.pl>
+  description: Install and configure DragonflyDB from binary with systemd
+
+  license: MIT
+
+  min_ansible_version: "2.12"
+
+  platforms:
+    - name: Ubuntu
+      versions:
+        - focal
+        - jammy
+        - noble
+    - name: Debian
+      versions:
+        - bullseye
+        - bookworm
+    - name: EL
+      versions:
+        - "8"
+        - "9"
+    - name: Fedora
+      versions:
+        - "38"
+        - "39"
+        - "40"
+
+  galaxy_tags:
+    - database
+    - dragonfly
+    - dragonflydb
+    - redis
+    - memcached
+    - cache
+    - nosql
+    - keyvalue
+
+dependencies: []
