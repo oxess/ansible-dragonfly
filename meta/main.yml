@@ -1,6 +1,7 @@
 ---
 galaxy_info:
   role_name: dragonfly
+  namespace: oxess
   author: Mikolaj Jeziorny <contact@mikolaj-jeziorny.pl>
   description: Install and configure DragonflyDB from binary with systemd
 

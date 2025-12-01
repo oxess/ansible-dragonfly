@@ -67,7 +67,14 @@
         remote_src: true
       notify: Restart dragonfly
 
+  rescue:
+    - name: Fail with download error
+      ansible.builtin.fail:
+        msg: "Failed to download or install dragonfly binary"
+
+  always:
     - name: Clean up temporary directory
       ansible.builtin.file:
         path: "{{ dragonfly_temp_dir.path }}"
         state: absent
+      when: dragonfly_temp_dir.path is defined
