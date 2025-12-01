@@ -1,0 +1,20 @@
+---
+- name: Prepare
+  hosts: all
+  become: true
+  gather_facts: true
+  tasks:
+    - name: Install required packages
+      ansible.builtin.apt:
+        name:
+          - tar
+          - gzip
+          - procps
+        state: present
+        update_cache: true
+
+    - name: Create ansible facts directory
+      ansible.builtin.file:
+        path: /etc/ansible/facts.d
+        state: directory
+        mode: "0755"

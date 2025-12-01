@@ -56,3 +56,6 @@ dragonfly_service_limit_nofile: 65535
 # Download settings
 dragonfly_github_repo: "dragonflydb/dragonfly"
 dragonfly_force_reinstall: false
+
+# Skip memory check (useful for testing in constrained environments)
+dragonfly_skip_memory_check: false

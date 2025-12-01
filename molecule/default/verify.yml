@@ -1,0 +1,80 @@
+---
+- name: Verify
+  hosts: all
+  become: true
+  gather_facts: true
+  vars:
+    dragonfly_port: 6379
+    dragonfly_bind: "127.0.0.1"
+
+  tasks:
+    - name: Gather service facts
+      ansible.builtin.service_facts:
+
+    - name: Verify dragonfly service is running
+      ansible.builtin.assert:
+        that:
+          - "'dragonfly.service' in ansible_facts.services"
+          - "ansible_facts.services['dragonfly.service'].state == 'running'"
+        fail_msg: "DragonflyDB service is not running"
+        success_msg: "DragonflyDB service is running"
+
+    - name: Verify dragonfly service is enabled
+      ansible.builtin.assert:
+        that:
+          - "ansible_facts.services['dragonfly.service'].status == 'enabled'"
+        fail_msg: "DragonflyDB service is not enabled"
+        success_msg: "DragonflyDB service is enabled"
+
+    - name: Check if dragonfly is listening on configured port
+      ansible.builtin.wait_for:
+        host: "{{ dragonfly_bind }}"
+        port: "{{ dragonfly_port }}"
+        state: started
+        timeout: 10
+      register: port_check
+
+    - name: Verify port check succeeded
+      ansible.builtin.assert:
+        that:
+          - port_check is success
+        fail_msg: "DragonflyDB is not listening on {{ dragonfly_bind }}:{{ dragonfly_port }}"
+        success_msg: "DragonflyDB is listening on {{ dragonfly_bind }}:{{ dragonfly_port }}"
+
+    - name: Verify dragonfly binary exists
+      ansible.builtin.stat:
+        path: /usr/local/bin/dragonfly
+      register: dragonfly_binary
+
+    - name: Assert dragonfly binary exists
+      ansible.builtin.assert:
+        that:
+          - dragonfly_binary.stat.exists
+          - dragonfly_binary.stat.executable
+        fail_msg: "DragonflyDB binary not found or not executable"
+        success_msg: "DragonflyDB binary is present and executable"
+
+    - name: Verify configuration file exists
+      ansible.builtin.stat:
+        path: /etc/dragonfly/dragonfly.conf
+      register: dragonfly_config
+
+    - name: Assert configuration file exists
+      ansible.builtin.assert:
+        that:
+          - dragonfly_config.stat.exists
+        fail_msg: "DragonflyDB configuration file not found"
+        success_msg: "DragonflyDB configuration file is present"
+
+    - name: Verify dragonfly user exists
+      ansible.builtin.getent:
+        database: passwd
+        key: dragonfly
+      register: dragonfly_user_check
+
+    - name: Assert dragonfly user exists
+      ansible.builtin.assert:
+        that:
+          - dragonfly_user_check is success
+        fail_msg: "DragonflyDB user does not exist"
+        success_msg: "DragonflyDB user exists"
