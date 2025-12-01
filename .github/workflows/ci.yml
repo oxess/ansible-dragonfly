@@ -67,7 +67,6 @@ jobs:
       fail-fast: false
       matrix:
         distro:
-          - ubuntu-focal
           - ubuntu-jammy
           - ubuntu-noble
           - debian-bullseye

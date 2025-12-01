@@ -6,18 +6,6 @@ driver:
   name: docker
 
 platforms:
-  - name: ubuntu-focal
-    image: geerlingguy/docker-ubuntu2004-ansible:latest
-    pre_build_image: true
-    privileged: true
-    cgroupns_mode: host
-    volumes:
-      - /sys/fs/cgroup:/sys/fs/cgroup:rw
-    command: /lib/systemd/systemd
-    tmpfs:
-      - /run
-      - /tmp
-
   - name: ubuntu-jammy
     image: geerlingguy/docker-ubuntu2204-ansible:latest
     pre_build_image: true
@@ -76,8 +64,6 @@ provisioner:
     verify: verify.yml
   inventory:
     host_vars:
-      ubuntu-focal:
-        ansible_python_interpreter: /usr/bin/python3
       ubuntu-jammy:
         ansible_python_interpreter: /usr/bin/python3
       ubuntu-noble:
