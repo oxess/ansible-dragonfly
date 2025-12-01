@@ -48,7 +48,6 @@
         src: "{{ dragonfly_temp_dir.path }}/dragonfly.tar.gz"
         dest: "{{ dragonfly_temp_dir.path }}"
         remote_src: true
-      when: dragonfly_download is changed
 
     - name: Find extracted dragonfly binary
       ansible.builtin.find:
