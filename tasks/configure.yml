@@ -18,3 +18,18 @@
   notify:
     - Reload systemd
     - Restart dragonfly
+
+- name: Deploy logrotate configuration
+  ansible.builtin.template:
+    src: dragonfly.logrotate.j2
+    dest: /etc/logrotate.d/dragonfly
+    owner: root
+    group: root
+    mode: "0644"
+  when: dragonfly_logrotate_enabled | bool
+
+- name: Remove logrotate configuration when disabled
+  ansible.builtin.file:
+    path: /etc/logrotate.d/dragonfly
+    state: absent
+  when: not (dragonfly_logrotate_enabled | bool)

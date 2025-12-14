@@ -79,6 +79,21 @@ DragonflyDB is a modern in-memory datastore, fully compatible with Redis and Mem
 | `dragonfly_log_level`   | `"info"` | Log level     |
 | `dragonfly_logtostderr` | `false`  | Log to stderr |
 
+### Logrotate Settings
+
+| Variable                            | Default   | Description                               |
+|-------------------------------------|-----------|-------------------------------------------|
+| `dragonfly_logrotate_enabled`       | `true`    | Enable logrotate configuration            |
+| `dragonfly_logrotate_frequency`     | `"daily"` | Rotation frequency (daily/weekly/monthly) |
+| `dragonfly_logrotate_rotate`        | `7`       | Number of rotated files to keep           |
+| `dragonfly_logrotate_maxsize`       | `"100M"`  | Rotate when log exceeds this size         |
+| `dragonfly_logrotate_compress`      | `true`    | Compress rotated logs                     |
+| `dragonfly_logrotate_delaycompress` | `true`    | Delay compression by one rotation         |
+| `dragonfly_logrotate_missingok`     | `true`    | Don't error if log file is missing        |
+| `dragonfly_logrotate_notifempty`    | `true`    | Don't rotate empty logs                   |
+| `dragonfly_logrotate_create_mode`   | `"0640"`  | Permissions for new log files             |
+| `dragonfly_logrotate_postrotate`    | `true`    | Signal Dragonfly to reopen log files      |
+
 ### Service Settings
 
 | Variable                         | Default        | Description             |

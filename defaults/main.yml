@@ -37,6 +37,18 @@ dragonfly_snapshot_cron: ""  # e.g., "*/15 * * * *" for every 15 minutes
 dragonfly_log_level: "info"  # debug, info, warning, error
 dragonfly_logtostderr: false
 
+# Logrotate configuration
+dragonfly_logrotate_enabled: true
+dragonfly_logrotate_frequency: "daily"  # daily, weekly, monthly
+dragonfly_logrotate_rotate: 7  # number of rotated files to keep
+dragonfly_logrotate_maxsize: "100M"  # rotate when log exceeds this size
+dragonfly_logrotate_compress: true
+dragonfly_logrotate_delaycompress: true
+dragonfly_logrotate_missingok: true
+dragonfly_logrotate_notifempty: true
+dragonfly_logrotate_create_mode: "0640"
+dragonfly_logrotate_postrotate: true  # send SIGUSR1 to reopen log files
+
 # Additional flags (list of strings)
 # Example:
 #   dragonfly_extra_flags:

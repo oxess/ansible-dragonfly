@@ -1,0 +1,25 @@
+{{ ansible_managed | comment }}
+
+{{ dragonfly_log_dir }}/*.log {
+    {{ dragonfly_logrotate_frequency }}
+    rotate {{ dragonfly_logrotate_rotate }}
+    size {{ dragonfly_logrotate_maxsize }}
+{% if dragonfly_logrotate_compress %}
+    compress
+{% endif %}
+{% if dragonfly_logrotate_delaycompress %}
+    delaycompress
+{% endif %}
+{% if dragonfly_logrotate_missingok %}
+    missingok
+{% endif %}
+{% if dragonfly_logrotate_notifempty %}
+    notifempty
+{% endif %}
+    create {{ dragonfly_logrotate_create_mode }} {{ dragonfly_user }} {{ dragonfly_group }}
+{% if dragonfly_logrotate_postrotate %}
+    postrotate
+        /bin/kill -USR1 $(cat /run/dragonfly/dragonfly.pid 2>/dev/null) 2>/dev/null || true
+    endscript
+{% endif %}
+}
