@@ -13,7 +13,9 @@ dragonfly_arch: "{{ dragonfly_arch_map[ansible_architecture] | default('x86_64')
 
 # Download URL pattern
 dragonfly_download_url: >-
-  https://github.com/{{ dragonfly_github_repo }}/releases/{{ 'latest/download' if dragonfly_version == 'latest' else 'download/' + dragonfly_version }}/dragonfly-{{ dragonfly_arch }}.tar.gz
+  https://github.com/{{ dragonfly_github_repo }}/releases/{{
+  'latest/download' if dragonfly_version == 'latest' else 'download/' + dragonfly_version
+  }}/dragonfly-{{ dragonfly_arch }}.tar.gz
 
 # Configuration file path
 dragonfly_config_file: "{{ dragonfly_config_dir }}/dragonfly.conf"
