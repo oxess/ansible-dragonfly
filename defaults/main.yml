@@ -17,6 +17,9 @@ dragonfly_group: "dragonfly"
 dragonfly_bind: "127.0.0.1"
 dragonfly_port: 6379
 
+# Memcached API configuration
+dragonfly_memcached_port: ""  # Set port to enable Memcached API (e.g., 11211), empty means disabled
+
 # Memory configuration
 dragonfly_maxmemory: ""  # e.g., "12gb", empty means no limit
 

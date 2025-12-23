@@ -1,0 +1,63 @@
+---
+- name: Verify
+  hosts: all
+  become: true
+  gather_facts: true
+  vars:
+    dragonfly_port: 6379
+    dragonfly_memcached_port: 11211
+    dragonfly_bind: "127.0.0.1"
+
+  tasks:
+    - name: Gather service facts
+      ansible.builtin.service_facts:
+
+    - name: Verify dragonfly service is running
+      ansible.builtin.assert:
+        that:
+          - "'dragonfly.service' in ansible_facts.services"
+          - "ansible_facts.services['dragonfly.service'].state == 'running'"
+        fail_msg: "DragonflyDB service is not running"
+        success_msg: "DragonflyDB service is running"
+
+    - name: Check if dragonfly is listening on Redis port
+      ansible.builtin.wait_for:
+        host: "{{ dragonfly_bind }}"
+        port: "{{ dragonfly_port }}"
+        state: started
+        timeout: 10
+      register: redis_port_check
+
+    - name: Verify Redis port check succeeded
+      ansible.builtin.assert:
+        that:
+          - redis_port_check is success
+        fail_msg: "DragonflyDB is not listening on Redis port {{ dragonfly_bind }}:{{ dragonfly_port }}"
+        success_msg: "DragonflyDB is listening on Redis port {{ dragonfly_bind }}:{{ dragonfly_port }}"
+
+    - name: Check if dragonfly is listening on Memcached port
+      ansible.builtin.wait_for:
+        host: "{{ dragonfly_bind }}"
+        port: "{{ dragonfly_memcached_port }}"
+        state: started
+        timeout: 10
+      register: memcached_port_check
+
+    - name: Verify Memcached port check succeeded
+      ansible.builtin.assert:
+        that:
+          - memcached_port_check is success
+        fail_msg: "DragonflyDB is not listening on Memcached port {{ dragonfly_bind }}:{{ dragonfly_memcached_port }}"
+        success_msg: "DragonflyDB is listening on Memcached port {{ dragonfly_bind }}:{{ dragonfly_memcached_port }}"
+
+    - name: Read dragonfly configuration file
+      ansible.builtin.slurp:
+        src: /etc/dragonfly/dragonfly.conf
+      register: dragonfly_config_content
+
+    - name: Verify memcached_port is in configuration
+      ansible.builtin.assert:
+        that:
+          - "'--memcached_port=11211' in (dragonfly_config_content.content | b64decode)"
+        fail_msg: "Memcached port configuration not found in dragonfly.conf"
+        success_msg: "Memcached port is correctly configured in dragonfly.conf"

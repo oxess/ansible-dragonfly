@@ -4,6 +4,11 @@
 # Network settings
 --bind={{ dragonfly_bind }}
 --port={{ dragonfly_port }}
+{% if dragonfly_memcached_port %}
+
+# Memcached API
+--memcached_port={{ dragonfly_memcached_port }}
+{% endif %}
 
 # Data directory
 --dir={{ dragonfly_data_dir }}

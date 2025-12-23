@@ -1,0 +1,17 @@
+---
+- name: Converge
+  hosts: all
+  become: true
+  gather_facts: true
+  vars:
+    dragonfly_skip_memory_check: true
+    dragonfly_version: "latest"
+    dragonfly_bind: "127.0.0.1"
+    dragonfly_port: 6379
+    dragonfly_memcached_port: 11211
+    dragonfly_maxmemory: "512mb"
+    dragonfly_extra_flags:
+      - "--proactor_threads=2"
+
+  roles:
+    - role: "{{ lookup('env', 'MOLECULE_PROJECT_DIRECTORY') | basename }}"

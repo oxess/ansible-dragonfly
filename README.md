@@ -46,6 +46,12 @@ DragonflyDB is a modern in-memory datastore, fully compatible with Redis and Mem
 | `dragonfly_bind` | `"127.0.0.1"` | Bind address |
 | `dragonfly_port` | `6379`        | Listen port  |
 
+### Memcached API Settings
+
+| Variable                   | Default | Description                                        |
+|----------------------------|---------|----------------------------------------------------|
+| `dragonfly_memcached_port` | `""`    | Memcached API port (e.g., `11211`), empty=disabled |
+
 ### Memory Settings
 
 | Variable              | Default | Description                     |
@@ -167,6 +173,18 @@ None.
         dragonfly_maxmemory: "16gb"
         dragonfly_service_limit_nofile: 100000
         dragonfly_snapshot_cron: "*/15 * * * *"
+```
+
+### Redis + Memcached Dual API Mode
+
+```yaml
+- hosts: cache_servers
+  roles:
+    - role: oxess.dragonfly
+      vars:
+        dragonfly_port: 6379
+        dragonfly_memcached_port: 11211
+        dragonfly_maxmemory: "8gb"
 ```
 
 ## Service Management
